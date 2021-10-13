@@ -2,13 +2,14 @@ package com.enercomn;
 
 
 import com.alibaba.fastjson.JSONObject;
-import com.enercomn.bean.dto.RegisterDto;
-import com.enercomn.properties.GeneralProperties;
-import com.enercomn.service.GeneralEnergyService;
+import com.enercomn.util.Sm4Util;
+import com.enercomn.web.bean.dto.RegisterDto;
+import com.enercomn.web.bean.properties.GeneralProperties;
+import com.enercomn.web.service.GeneralEnergyService;
 import com.enercomn.util.HttpsClient;
 import com.enercomn.util.HttpsClientRequestFactory;
 import com.enercomn.util.ObjectMapperUtil;
-import com.enercomn.service.SingletonRegister;
+import com.enercomn.web.service.SingletonRegister;
 import lombok.extern.log4j.Log4j2;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +19,9 @@ import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Log4j2
@@ -59,6 +62,16 @@ public class RequestDataTest {
     public void test6() throws Exception {
         generalEnergyService.uploadData();
 
+    }
+
+    @Test
+    public void test7() throws Exception {
+        List<String> list  = new ArrayList<String>();
+        List<String> list1 = list.subList(0,5);
+        for (String str:list1 ) {
+            System.out.println(str);
+        }
+        log.info("{}",list1);
     }
     @Test
     public void test4() {
@@ -112,5 +125,11 @@ public class RequestDataTest {
         time = System.currentTimeMillis()-time;
         log.info( "运行"+time+"毫秒");
         log.info("地址响应信息："+response.getBody());
+    }
+
+
+    @Test
+    public void test8() throws Exception {
+        System.out.println(Sm4Util.encryptEcb("7c7ab08b3d934268996faf7eb5e0342d","2021-10-12 13:00:33"));;
     }
 }

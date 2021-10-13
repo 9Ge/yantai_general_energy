@@ -17,7 +17,7 @@ import java.net.UnknownHostException;
 @Slf4j
 @EnableScheduling
 @SpringBootApplication
-@MapperScan(basePackages ="com.enercomn.mapper")
+@MapperScan(basePackages ="com.enercomn.web.mapper")
 public class YantaiGeneralEnergyApplication {
 
     public static void main(String[] args) throws UnknownHostException {

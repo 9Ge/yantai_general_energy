@@ -31,6 +31,18 @@ spring:
       indent_output: true
     date-format: yyyy-MM-dd
     time-zone: GMT+8
+  redis:
+    database: 5
+    host: localhost
+    port: 6379
+    password:
+    jedis:
+      pool:
+        max-active: 20
+        max-idle: 10
+        max-wait: -1
+        min-idle: 0
+    timeout: 1000
 mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

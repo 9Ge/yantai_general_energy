@@ -1,8 +1,8 @@
 package com.enercomn.handler;
 
-import com.enercomn.bean.TbEnergyRequestLog;
+import com.enercomn.web.bean.TbEnergyRequestLog;
 import com.enercomn.exception.RequestException;
-import com.enercomn.mapper.TbEnergyRequestLogMapper;
+import com.enercomn.web.mapper.TbEnergyRequestLogMapper;
 import com.enercomn.util.ObjectMapperUtil;
 import com.enercomn.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,6 @@ import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -21,8 +20,10 @@ import java.util.Date;
 @Aspect
 @Component
 public class AroundAnnotationAspect {
+
     @Autowired
     private TbEnergyRequestLogMapper tbEnergyRequestLogMapper;
+
     @Pointcut(value = "@annotation(com.enercomn.handler.anno.RequestLog)")
     public void operationLog() {
     }
@@ -42,19 +43,19 @@ public class AroundAnnotationAspect {
      */
     @AfterReturning(pointcut = "operationLog()", returning = "result")
     public void after(JoinPoint joinPoint, Object result) {
-        createLog(joinPoint,null,ObjectMapperUtil.writeValueAsString(result));
+        createLog(joinPoint, null, ObjectMapperUtil.writeValueAsString(result));
     }
 
     @AfterThrowing(pointcut = "operationLog()", throwing = "e")
     public void saveExceptionLog(JoinPoint joinPoint, Throwable e) {
         try {
-            createLog(joinPoint,e.getMessage(),null);
+            createLog(joinPoint, e.getMessage(), null);
         } catch (RequestException ex) {
-            log.error("请求接口失败");;
+            log.error("请求接口失败");
         }
     }
 
-    public void createLog(JoinPoint joinPoint,String errorMessage,String responseInfo) throws RequestException {
+    public void createLog(JoinPoint joinPoint, String errorMessage, String responseInfo) throws RequestException {
         TbEnergyRequestLog log = new TbEnergyRequestLog();
         log.setId(StringUtils.getUUID());
         log.setRequestTime(new Date());
@@ -63,6 +64,9 @@ public class AroundAnnotationAspect {
         log.setRequestUrl(ObjectMapperUtil.writeValueAsString(joinPoint.getArgs()[1]));
         log.setFailedMessage(errorMessage);
         log.setResponseInfo(responseInfo);
+        if (StringUtils.isEmpty(responseInfo)) {
+            log.setResultFlag("请求失败");
+        }
         tbEnergyRequestLogMapper.insert(log);
     }
 }

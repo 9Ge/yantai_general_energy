@@ -59,12 +59,15 @@ public class AroundAnnotationAspect {
         TbEnergyRequestLog log = new TbEnergyRequestLog();
         log.setId(StringUtils.getUUID());
         log.setRequestTime(new Date());
-        log.setRequestInfo(ObjectMapperUtil.writeValueAsString(joinPoint.getArgs()[0]));
+        log.setRequestInfoDecr(ObjectMapperUtil.writeValueAsString(joinPoint.getArgs()[0]));
+        log.setRequestInfo(ObjectMapperUtil.writeValueAsString(joinPoint.getArgs()[1]));
         log.setRequestLongTime(System.currentTimeMillis() - startTime.get());
-        log.setRequestUrl(ObjectMapperUtil.writeValueAsString(joinPoint.getArgs()[1]));
-        log.setFailedMessage(errorMessage);
+        log.setRequestUrl(ObjectMapperUtil.writeValueAsString(joinPoint.getArgs()[2]));
         log.setResponseInfo(responseInfo);
-        if (StringUtils.isEmpty(responseInfo)) {
+        if (StringUtils.isEmpty(errorMessage)) {
+            log.setResultFlag("请求成功");
+        }else{
+            log.setFailedMessage(errorMessage);
             log.setResultFlag("请求失败");
         }
         tbEnergyRequestLogMapper.insert(log);

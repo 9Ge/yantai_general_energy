@@ -2,16 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.enercomn.web.mapper.TbEnergyDataCollectorValueMapper">
 
-  <insert id="saveBatch" parameterType="java.util.List">
-    insert into tb_energy_data_collector_value (id,redis_key, redis_value, data_code,
-    push_time, collector_time)
-    values
-    <foreach collection="list" item="item" index="index" separator=",">
-      (#{item.id,jdbcType=VARCHAR},#{item.redisKey,jdbcType=VARCHAR}, #{item.redisValue,jdbcType=VARCHAR}, #{item.dataCode,jdbcType=VARCHAR},
-      #{item.pushTime,jdbcType=TIMESTAMP}, #{item.collectorTime,jdbcType=TIMESTAMP}
-      )
-    </foreach>
-  </insert>
+    <insert id="saveBatch" parameterType="java.util.List">
+        insert into tb_energy_data_collector_value (id,redis_key, redis_value, data_code,
+        collector_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id,jdbcType=VARCHAR},#{item.redisKey,jdbcType=VARCHAR}, #{item.redisValue,jdbcType=VARCHAR},
+            #{item.dataCode,jdbcType=VARCHAR}, #{item.collectorTime,jdbcType=TIMESTAMP}
+            )
+        </foreach>
+    </insert>
+    <select id="queryValue" parameterType="com.enercomn.web.bean.vo.QueryCollectorParamVo"
+            resultType="com.enercomn.web.bean.dto.UploadDeviceData">
+    select data_code dataCode,sum(max_num)-sum(min_num) dataValue from (
+        select data_code,redis_key,MAX(redis_value) max_num,MIN(redis_value) min_num
+        from tb_energy_data_collector_value
+        where collector_time BETWEEN #{startTime} and #{endTime}
+        GROUP BY data_code,redis_key
+        ) a GROUP BY data_code
+  </select>
 
+    <select id="queryValueByCode" parameterType="com.enercomn.web.bean.vo.QueryCollectorParamVo"
+            resultType="com.enercomn.web.bean.dto.UploadDeviceData">
+        select  sum(max_num)-sum(min_num) dataValue from (
+            select MAX(redis_value) max_num,MIN(redis_value) min_num
+            from tb_energy_data_collector_value
+            where (
+                    collector_time BETWEEN #{startTime} and #{endTime}) and  data_code= #{dataCode}
+            GROUP BY redis_key
+        )  a limit 0,1
+  </select>
 
 </mapper>

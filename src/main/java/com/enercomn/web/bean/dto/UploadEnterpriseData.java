@@ -17,9 +17,18 @@ public class UploadEnterpriseData {
 
     @ApiModelProperty(hidden = true)
     private String deviceId;
+
+    public UploadEnterpriseData(String deviceId, String enterpriseCode, List<UploadDeviceData> data) {
+        this.deviceId = deviceId;
+        this.enterpriseCode = enterpriseCode;
+        this.data = data;
+    }
+
     @ApiModelProperty(hidden = true)
     private String enterpriseCode;
     @ApiModelProperty(required = true)
     private List<UploadDeviceData> data;
 
+    public UploadEnterpriseData() {
+    }
 }

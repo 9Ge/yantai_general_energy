@@ -24,7 +24,7 @@ import java.util.Map;
 public class HttpsClient {
 
     @RequestLog
-    public Map postClient(Map param, String url) throws RequestException {
+    public Map postClient(Map unencryptedParam,Map param, String url) throws RequestException {
         try {
             ResponseEntity<Map> response = null;
             RestTemplate restTemplate = new RestTemplate(new HttpsClientRequestFactory());

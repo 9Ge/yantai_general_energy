@@ -1,3 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.enercomn.web.mapper.TbEnergyDataCollectorRelationMapper"></mapper>
+<mapper namespace="com.enercomn.web.mapper.TbEnergyDataCollectorRelationMapper">
+    <insert id="saveBatch" parameterType="java.util.List">
+        insert into tb_energy_data_collector_value (id,redis_key, data_code, tb_energy_data_id)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id,jdbcType=VARCHAR},#{item.redisKey,jdbcType=VARCHAR}, #{item.dataCode,jdbcType=VARCHAR},
+            #{item.tbEnergyDataId,jdbcType=VARCHAR}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

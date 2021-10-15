@@ -55,7 +55,7 @@ public class SingletonRegister {
         Map param  = new HashMap(2);
         param.put("enterpriseCode", generalProperties.getEnterpriseCode());
         param.put("region",generalProperties.getRegion());
-        Map body = httpsClient.postClient(param,generalProperties.getRegisterUrl());
+        Map body = httpsClient.postClient(param,param,generalProperties.getRegisterUrl());
         return ObjectMapperUtil.mapToBean(body, RegisterDto.class);
     }
 }

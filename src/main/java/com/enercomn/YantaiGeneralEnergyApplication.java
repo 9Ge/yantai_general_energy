@@ -1,6 +1,8 @@
 package com.enercomn;
 
+import com.enercomn.time.EnergyDataTask;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -19,9 +21,15 @@ import java.net.UnknownHostException;
 @SpringBootApplication
 @MapperScan(basePackages ="com.enercomn.web.mapper")
 public class YantaiGeneralEnergyApplication {
-
     public static void main(String[] args) throws UnknownHostException {
         ConfigurableApplicationContext application = SpringApplication.run(YantaiGeneralEnergyApplication.class, args);
+
+        try {
+            EnergyDataTask task = application.getBean(EnergyDataTask.class);
+            task.openTask();
+        } catch (Exception e) {
+            log.error("开启定时任务失败,失败原因:{}",e);
+        }
         Environment env = application.getEnvironment();
         String ip = InetAddress.getLocalHost().getHostAddress();
         String port = env.getProperty("server.port");
@@ -32,6 +40,7 @@ public class YantaiGeneralEnergyApplication {
                 "swagger-ui: \thttp://" + ip + ":" + port + path + "/swagger-ui.html\n\t" +
                 "Doc: \t\thttp://" + ip + ":" + port + path + "/doc.html\n" +
                 "----------------------------------------------------------");
+
     }
 
 }

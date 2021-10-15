@@ -24,7 +24,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/upload")
-@Api(value = "用能单位采集数据上传",tags = "用能单位采集数据上传")
+@Api(value = "用能单位采集数据手动上传",tags = "用能单位采集数据手动上传")
 public class UploadEnterpriseDataController {
 
     @Autowired
@@ -34,7 +34,7 @@ public class UploadEnterpriseDataController {
     @RequestMapping(value = "/energy", method = RequestMethod.POST)
     public ResultMsg importExcel(@RequestBody UploadEnterpriseData uploadEnterpriseData) throws Exception {
         try {
-            Map map = generalEnergyService.uploadEnterpriseData(uploadEnterpriseData);
+            Map map = generalEnergyService.uploadEncryptEnterpriseData(uploadEnterpriseData);
             Object responseCode = map.get("responseCode");
             if(responseCode == null || !String.valueOf(responseCode).equals(0)){
                 return new ResultMsg(ResultStatusCode.REQUEST_FAIL.getResultCode(),"上传失败，失败原因："+map.get("responseMessage"),map);

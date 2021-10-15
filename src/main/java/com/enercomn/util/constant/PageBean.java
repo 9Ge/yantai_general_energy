@@ -102,7 +102,7 @@ public class PageBean<T>  {
     public PageBean(PageInfo<T> pageInfo) {
         totalCount = pageInfo.getTotal();
         currPage = pageInfo.getPageNum();
-        currCount = pageInfo.getSize();
+        currCount = pageInfo.getPageSize();
         dataList = pageInfo.getList();
         pages = pageInfo.getPages();
         nextPage = pageInfo.getNextPage();
